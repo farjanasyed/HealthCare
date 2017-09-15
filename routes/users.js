@@ -7,14 +7,14 @@ var config = require('../config/database');
 
 router.post('/register', function (req, res) {
 	console.log(req.files);
-	var newUser = new User({
+	var newUser = {
 		name: req.body.name,
 		email: req.body.email,
-		username: req.body.username,
 		password: req.body.password,
-		avatar: req.files
-	})
-	User.getUserByUsername(newUser.username, function (err, user) {
+		mobileno:req.body.mobno,
+		dob:req.body.dob
+	}
+	User.getUserByEmail(newUser.email, function (err, user) {
 		if (err) throw err;
 		if (user) {
 			res.json({
@@ -37,10 +37,10 @@ router.post('/register', function (req, res) {
 		}
 	})
 })
-router.post('/authentication', function (req, res) {
-	var username = req.body.username;
+router.post('/login', function (req, res) {
+	var email = req.body.email;
 	var password = req.body.password;
-	User.getUserByUsername(username, function (err, user) {
+	User.getUserByEmail(email, function (err, user) {
 		if (err) {
 			throw err;
 		}
@@ -63,7 +63,8 @@ router.post('/authentication', function (req, res) {
 						id: user._id,
 						name: user.name,
 						email: user.email,
-						username: user.username
+						mobileno: user.mobileno,
+						dob:user.dob
 					}
 				})
 			} else {
@@ -76,7 +77,7 @@ router.post('/authentication', function (req, res) {
 		});
 	});
 })
-router.get('/profile', passport.authenticate('jwt', {
+router.get('/dashboard', passport.authenticate('jwt', {
 	session: false
 }), function (req, res) {
 	res.send({

@@ -1,4 +1,4 @@
 module.exports={
-    database:"mongodb://viping7:highveld@ds147902.mlab.com:47902/meanauth",
+    database:"mongodb://admin:nimda@ds135394.mlab.com:35394/edex",
     secret:"highveld"
 }

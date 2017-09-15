@@ -1,16 +1,11 @@
 var mongoose=require('mongoose');
 var bcrypt=require('bcryptjs');
 var config=require('../config/database');
-
 var userSchema=mongoose.Schema({
     name:{
-     type:String   
+        type:String   
     },
     email:{
-        type:String,
-        required:true
-    },
-    username:{
         type:String,
         required:true
     },
@@ -18,32 +13,30 @@ var userSchema=mongoose.Schema({
         type:String,
         required:true
     },
-    avatar:{
-        type:Object
+    dob:{
+        type:String,
+        required:true
     },
-    file:{
-        type:Object
+    mobileno:{
+        type:Number,
+        required:true
     }
 });
-
 const User=module.exports=mongoose.model('users',userSchema);
-module.exports.getUsers=function(callback){
-    User.find(callback);
-}
+
 module.exports.getUserById=function(id,callback){
     User.findById(id,callback);
 }
-module.exports.getUserByUsername=function(username,callback){
+
+module.exports.getUserByEmail=function(email,callback){
     var data={
-        username:username
+        email:email
     }
     User.findOne(data,callback);
 }
 
-module.exports.addUser=function(newUser,callback){
-    var data={
-        username:newUser.username
-    }
+module.exports.addUser=function(user,callback){
+    let newUser=new User(user);
     bcrypt.hash(newUser.password,10,function(err,hash){
         newUser.password=hash;
        newUser.save(callback);
@@ -59,14 +52,3 @@ module.exports.comparePassword=function(password,hash,callback){
 		}
 	})
 }
-module.exports.addFiles=function(files,username,callback){
-    var data={
-        file:files
-    }
-    User.update(username,data,{},callback);
-    }
-  /*  var n_username=username.split('=')[1];
-    var n_data={
-        username:n_username
-    }
-    User.findOne(n_data);*/
